@@ -11,6 +11,7 @@ def is_prime(n):
 
 try:
     number = int(input("addadi vared konid ta adade avale  bein 1 ta on adad chap shavad: "))
+    
 except ValueError:
     print("Faqat adad mored qabol ast!")
 

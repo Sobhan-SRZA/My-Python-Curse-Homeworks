@@ -6,9 +6,10 @@ def clear_window():
 
 def print_title(string):
     clear_window()
-    print(("-") * 100)
-    print(f"\t{string}")
-    print(("-") * 100)
+    title = f"\t{string}"
+    print(("-") * (len(title) * 2))
+    print(title)
+    print(("-") * (len(title) * 2))
     print("\n")
 
 def list_to_str(str_list):
