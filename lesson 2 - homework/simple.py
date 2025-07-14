@@ -1,0 +1,15 @@
+# برنامه ای که نام نام خانوادگی، شماره دانشجویی، معدل، وضعیت تحصیلی (فعال، مشروط، اخراج)، تاریخ ثبت نام YYYY/MM/DD و در نهایت به صورات خطی و ستونی چاپ کند.
+full_name = input("لطفا نام نام خانوادگی دانشجو را وارد کنید: ")
+student_number = int(input("لطفا شماره دانشجویی را وارد کنید: "))
+score = float(input("لطفا معدل را وارد کنید: "))
+study_status = input("لطفا وضعیت تحصیلی را وارد کنید (فقط مقدار های رو به رو قابل قبول است: فعال، مشروط، اخراج): ")
+register_time = input("لطفا تاریخ ثبت نام دانشجو را وارد کنید (فرمت درست: YYYY/MM/DD): ")
+
+print("\n\n")
+print(f"{full_name},\t{student_number},\t{score},\t{study_status},\t{register_time}")
+print("\n\n")
+print("نام نام خانوادگی:\t", full_name)
+print("شماره دانشجویی:\t\t", student_number)
+print("معدل:\t\t\t", score)
+print("وضیعت تحصیلی:\t\t", study_status)
+print("تاریخ ثبت نام:\t\t", register_time)
