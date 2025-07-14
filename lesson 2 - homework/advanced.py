@@ -57,7 +57,7 @@ def study_status_input():
 
 def full_name_input():
     clear_window()
-    full_name = input("Lotfan naame va naame khanevadegi daneshjoo ra vared konid: ")
+    full_name = input("Lotfan naam va naame khanevadegi daneshjoo ra vared konid: ")
 
     return full_name
 
@@ -118,7 +118,7 @@ def get_field_input(field: str):
 
         case "register_time":
             return register_time_input()
-            
+
         case _:
             return None
 
@@ -167,11 +167,11 @@ def delete_student(student_number: int):
 while True:
     print_title('Welcome to "Student Manager"')
     print(
-        "1. Afzodan Daneshjoo\n"
-        "2. Hazf Daneshjoo\n"
-        "3. Taghir Etelaat Daneshjoo\n"
+        "1. Afzodane Daneshjoo\n"
+        "2. Hazfe Daneshjoo\n"
+        "3. Taghire Etelaat Daneshjoo\n"
         "4. Liste Daneshjoo haye sabt shode\n"
-        "5. Namayesh Etelaat Daneshjoo\n"
+        "5. Namayeshe Etelaate Daneshjoo\n"
         "6. Khorooj\n"
     )
 
@@ -209,7 +209,7 @@ while True:
         if not students:
             print("Hich daneshjoo'i sabt nashode ast.")
         else:
-            header = f"{'Tarikh Sabt':<15} | {'Vaziyat Tahsili':<15} | {'Moaddel':<7} | {'Name va Nam Khanevadegi':<30} | {'Shomare Daneshjooei':<20} | {'Radif':<5}"
+            header = f"{'Tarikh Sabt':<15} | {'Vaziyat Tahsili':<15} | {'Moaddel':<7} | {'Naam va Naame Khanevadegi':<30} | {'Shomare Daneshjooei':<20} | {'Radif':<5}"
             print("-" * len(header))
             print(header)
             print("-" * len(header))
@@ -230,7 +230,14 @@ while True:
             else:
                 info = students[sn]
                 print("\nEtelaat Daneshjoo:")
-                print(f"Name va Nam Khanevadegi: {info['full_name']}")
+                line_data = f"{info['full_name']}, {info['student_number']}, {info['score']}, {info['study_status']}, {info['register_time']}"                                   
+                print("\n")
+                print("\n")
+                print("-" * len(line_data))
+                print(line_data)
+                print("-" * len(line_data))
+                print("\n")
+                print(f"Naam va Naame Khanevadegi: {info['full_name']}")
                 print(f"Shomare Daneshjooei: {info['student_number']}")
                 print(f"Moaddel: {info['score']}")
                 print(f"Vaziyat Tahsili: {info['study_status']}")
