@@ -38,6 +38,7 @@ while True:
         "2. Amale gam (+)\n"
         "3. Amale zarb (*)\n"
         "4. Amale taqsim (/)\n"
+        "5. Khorooj\n"
     )
 
     choice = input("Lotfan az bein gozineha entekhab konid: ")
@@ -146,4 +147,53 @@ while True:
             print(f"Natije: {resualt}")
             enter_input()       
 
-         
+    elif choice == "4":
+        clear_window()
+        resualt = get_input()
+
+        if resualt == "q":
+            print("Khorooj")
+            enter_input()
+            continue
+
+        if resualt == 0:
+            print("Khata: Adade avalie vared shode nemitavanad sefr bashad!")
+            enter_input()
+            continue
+
+        numbers = []
+        numbers.append(str(resualt))
+
+        while True:
+            num = get_input()
+            if num == "q":
+                break
+
+            if num == 0:
+                print("Khata: Taghsim bar sefr mojaz nist! Adade digari vared konid.")
+                continue
+
+            numbers.append(str(num))
+            resualt /= num
+
+        if len(numbers) < 2:
+            print(
+                "Faghat yek adad vared shode ast va amale taqsim emal nemishavad.\n"
+                f"Natige: {resualt}"
+            )
+        else:
+            print("-" * 30)
+            print(" / ".join(numbers) + f" = {resualt}")
+            print("-" * 30)
+            print(f"Natije: {resualt}")
+
+        enter_input()
+
+    elif choice == "5":
+        print("Khorooj az barname. Bedrood!")
+        break
+
+    else:
+        clear_window()
+        print("Gozine namoatabar ast. Lotfan dobare talash konid.")
+        enter_input()
