@@ -182,8 +182,10 @@ while True:
         clear_window()
         try:
             add_student()
+
         except Exception as e:
             print("Khata:", e)
+
         enter_input()
 
     elif choice == "2":
@@ -191,8 +193,10 @@ while True:
         try:
             sn = int(input("Shomare daneshjooei ra baraye hazf vared konid: "))
             delete_student(sn)
+
         except Exception as e:
             print("Khata:", e)
+
         enter_input()
 
     elif choice == "3":
@@ -201,14 +205,17 @@ while True:
             sn = int(input("Shomare daneshjooei ra baraye taghir vared konid: "))
             field = input(f"Filed mored nazar ra vared konid ({list_to_str(field_values)}): ")
             change_student(sn, field)
+
         except Exception as e:
             print("Khata:", e)
+
         enter_input()
 
     elif choice == "4":
         clear_window()
         if not students:
             print("Hich daneshjoo'i sabt nashode ast.")
+
         else:
             header = f"{'Tarikh Sabt':<15} | {'Vaziyat Tahsili':<15} | {'Moaddel':<7} | {'Naam va Naame Khanevadegi':<30} | {'Shomare Daneshjooei':<20} | {'Radif':<5}"
             print("-" * len(header))
@@ -228,6 +235,7 @@ while True:
             sn = int(input("Shomare daneshjooei ra baraye namayesh vared konid: "))
             if sn not in students:
                 print("Daneshjoo'i ba in shomare sabt nashode ast.")
+                
             else:
                 info = students[sn]
                 print("\nEtelaat Daneshjoo:")

@@ -64,7 +64,7 @@ def get_number(name):
             return float(input(f"Lotfan meghdar {name} ra vared konid: "))
 
         except ValueError:
-            choice = print("Vorodi namotabar!")
+            print("Vorodi namotabar!")
 
 def main():
     while True:
