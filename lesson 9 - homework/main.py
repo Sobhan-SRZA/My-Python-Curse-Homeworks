@@ -22,7 +22,6 @@ while True:
     if choice == "1":
         name = input("Name daneshjoo: ")
 
-
         math = None
         while True:
             math = input("Nomre riazi: ")
@@ -90,6 +89,7 @@ while True:
         for name in students:
             if "miyangin" in students[name]:
                 avg = students[name]["miyangin"]
+
             else:
                 avg = (students[name]["riazi"] + students[name]["physics"] + students[name]["shimi"]) / 3
                 students[name]["miyangin"] = avg
@@ -113,6 +113,7 @@ while True:
             if students[name]["physics"] > 17:
                 print("- " + name)
                 has_found = True
+
         if not has_found:
             print("Hich daneshjooei peyda nashod.")
 
@@ -130,6 +131,7 @@ while True:
             print(f"- {name}: Riazi={d['riazi']}, Physics={d['physics']}, Shimi={d['shimi']}", end='')
             if "miyangin" in d:
                 print(f", Miyangin={round(d['miyangin'], 2)}")
+
             else:
                 print()
 
@@ -184,6 +186,7 @@ while True:
         if name in students:
             del students[name]
             print("Daneshjoo hazf shod.")
+            
         else:
             print("In daneshjoo vojood nadarad.")
             
