@@ -21,9 +21,9 @@ reshtaha = []
 
 i = 0
 while i < tedad:
-    r = input("Reshte ra vared konid: ")
-    reshtaha.append(r)
     i += 1
+    r = input(f"Reshte shomare {i} ra vared konid: ")
+    reshtaha.append(r)
 
 while True:
     print("\n--- Menu Asli ---")
@@ -54,8 +54,27 @@ while True:
         print("2. lower")
         print("3. upper")
         print("4. count")
-        m = input("Shomare metod ra vared konid: ")
-        shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+        m = None
+        while True:
+            m = input("Shomare metod ra vared konid: ")
+            if m not in ["1","2","3","4"]:
+                print("Gozine na motabar")
+                input("\nBaraie edameh enter konid...")
+                continue
+
+            else:
+                break
+
+        while True:
+            shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+            if shomare not in [str(x) for x in range(1, len(reshtaha) + 1)]:
+                print("Shomare eshtebah ast")
+                input("\nBaraie edameh enter konid...")
+                continue
+
+            else:
+                break
+
         if shomare.isdigit() and int(shomare) <= len(reshtaha):
             reshte = reshtaha[int(shomare)-1]
             if m == "1":
@@ -75,16 +94,19 @@ while True:
                 print("Tedad:", reshte.count(harf))
                 input("\nBaraie edameh enter konid...")
 
-            else:
-                print("Gozine na motabar")
-                input("\nBaraie edameh enter konid...")
-
-        else:
-            print("Shomare eshtebah ast")
-            input("\nBaraie edameh enter konid...")
 
     elif entekhab == "3":
-        shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+        shomare = None
+        while True:
+            shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+            if shomare not in [str(x) for x in range(1, len(reshtaha) + 1)]:
+                print("Shomare eshtebah ast")
+                input("\nBaraie edameh enter konid...")
+                continue
+
+            else:
+                break
+
         if shomare.isdigit() and int(shomare) <= len(reshtaha):
             reshte = reshtaha[int(shomare)-1]
             print("isalnum:", reshte.isalnum())
@@ -96,7 +118,17 @@ while True:
             input("\nBaraie edameh enter konid...")
 
     elif entekhab == "4":
-        shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+        shomare = None
+        while True:
+            shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+            if shomare not in [str(x) for x in range(1, len(reshtaha) + 1)]:
+                print("Shomare eshtebah ast")
+                input("\nBaraie edameh enter konid...")
+                continue
+
+            else:
+                break
+
         if shomare.isdigit() and int(shomare) <= len(reshtaha):
             reshte = reshtaha[int(shomare)-1]
             az = input("Az kodam index shoro shavad? (0 shoroo): ")
@@ -115,7 +147,17 @@ while True:
 
 
     elif entekhab == "5":
-        shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+        shomare = None
+        while True:
+            shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+            if shomare not in [str(x) for x in range(1, len(reshtaha) + 1)]:
+                print("Shomare eshtebah ast")
+                input("\nBaraie edameh enter konid...")
+                continue
+
+            else:
+                break
+
         if shomare.isdigit() and int(shomare) <= len(reshtaha):
             reshte = reshtaha[int(shomare)-1]
             ghadimi = input("Kalame ghadimi: ")
@@ -130,7 +172,17 @@ while True:
 
 
     elif entekhab == "6":
-        shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+        shomare = None
+        while True:
+            shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+            if shomare not in [str(x) for x in range(1, len(reshtaha) + 1)]:
+                print("Shomare eshtebah ast")
+                input("\nBaraie edameh enter konid...")
+                continue
+
+            else:
+                break
+
         if shomare.isdigit() and int(shomare) <= len(reshtaha):
             reshte = reshtaha[int(shomare)-1]
             liste_horoof = []
@@ -147,32 +199,45 @@ while True:
 
     elif entekhab == "7":
         print("Tedad horoof baraye estefade az string haye mojood ra vared konid:")
-        tedad = input("Tedad horoof: ")
-        if not tedad.isdigit():
-            print("Lotfan adad vared konid.")
-            input("\nBaraie edameh enter konid...")
+        tedad = None
+        while True:
+            tedad = input("Tedad horoof: ")
+            if not tedad.isdigit():
+                print("Lotfan adad vared konid.")
+                input("\nBaraie edameh enter konid...")
+                continue
 
-        else:
-            tedad = int(tedad)
-            reshte = ""
-            i = 0
-            while i < tedad:
-                sr = reshtaha[i % len(reshtaha)]
-                reshte += sr[i % len(sr)]
-                i += 1
-            print("Reshte tasadofi:", reshte)
-            input("\nBaraie edameh enter konid...")
+            else:
+                break
+
+        tedad = int(tedad)
+        reshte = ""
+        i = 0
+        while i < tedad:
+            sr = reshtaha[i % len(reshtaha)]
+            reshte += sr[i % len(sr)]
+            i += 1
+
+        print("Reshte tasadofi:", reshte)
+        input("\nBaraie edameh enter konid...")
 
     elif entekhab == "8":
-        shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+        shomare = None
+        while True:
+            shomare = input("Shomare reshte (az 1 ta {}) ra vared konid: ".format(len(reshtaha)))
+            if shomare not in [str(x) for x in range(1, len(reshtaha) + 1)]:
+                print("Shomare eshtebah ast")
+                input("\nBaraie edameh enter konid...")
+                continue
+
+            else:
+                break
+
         if shomare.isdigit() and int(shomare) <= len(reshtaha):
             reshte = reshtaha[int(shomare)-1]
             print("Reshte format shode: [{}]".format(reshte))
             input("\nBaraie edameh enter konid...")
 
-        else:
-            print("Shomare eshtebah ast")
-            input("\nBaraie edameh enter konid...")
 
     elif entekhab == "9":
         print("Khorooj az barname.")
@@ -180,3 +245,4 @@ while True:
 
     else:
         print("Gozine na motabar ast.")
+        input("\nBaraie edameh enter konid...")
