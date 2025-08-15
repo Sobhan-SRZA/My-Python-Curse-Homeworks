@@ -17,8 +17,8 @@ file_name = "contacts.json"
 
 # Custom error for not found the contatc
 class ContactNotFoundError(Exception):
-    def __init__(self, id: str, message = "Karbar ba id {id} yaft nashod!"):
-        super().__init__(message.format(id))
+    def __init__(self, id: str, message = "Khata: Karbar ba id {id} yaft nashod!"):
+        super().__init__(message.replace("{id}", id or "[no id]"))
 
     pass
 
@@ -82,6 +82,7 @@ def delete_contact(id: str):
         contacts.__delitem__(id)
         write_database(contacts)
 
+        return True
     
     raise ContactNotFoundError(id, "Karbar ba id {id} yaft nashod!")
 
@@ -101,7 +102,7 @@ def find_contact(search: str):
             or (last_name and (last_name.count(search) > 0))\
             or filter(lambda phone: phone.count(search) > 0, phone):
 
-            return (id, value)
+            return id
         
         else:
             continue
@@ -126,12 +127,20 @@ def get_int(input_describe: str = "Adad ra vared konid: ", skip_zero: bool = Fal
 
 
 # Return phone numbers from user enter
-def getPhoneInput() -> list[str]:
-        phone = []
+def get_phone_input(phone: list[str] = []):
         i = 0
         while True:
+            phone_check = i <= (len(phone) - 1) and phone[i]
+            if phone_check:
+                print("Shomare zakhire shode dar in qam =", phone[i])
+
             contact_phone = input(f"Shomare {i + 1} om mokhatab ra vared konid (baraie khorooj \"e\" befrestid): ")
             if len(contact_phone) < 1:
+                if phone_check:
+                    print("Meqdar taghir nakard.")
+                    i += 1
+                    continue
+
                 print("Khata: Vorodi khali ast!")
                 continue
 
@@ -142,7 +151,12 @@ def getPhoneInput() -> list[str]:
 
                 break
 
-            phone.append(contact_phone)
+            if phone_check:
+                phone[i] = contact_phone
+
+            else:
+                phone.append(contact_phone)
+
             i += 1
 
         return phone
@@ -155,7 +169,7 @@ def find_contact_from_input():
             print("Khata: Voroodi khali ast dobare talash konid!")
             continue
 
-        finded_contact, __ = find_contact(user_search_input)
+        finded_contact = find_contact(user_search_input)
         if finded_contact:
             return finded_contact
 
@@ -215,7 +229,7 @@ while True:
     # Add contact
     if user_choice == "1":
         clear_window()
-        phone = getPhoneInput()
+        phone = get_phone_input()
 
         contact_first_name = input("Name mokhatab ra vared konid (dar gheire in sorat enter konid): ")
         if len(contact_first_name) < 1:
@@ -237,6 +251,8 @@ while True:
         contacts = get_contacts()
         user_search_input = find_contact_from_input()
         finded_contact = contacts.get(user_search_input)
+
+        # A menu for editing items
         while True:
             edit_menu_items = {
                 "1": f"1. Virayeshe name (name feli: {finded_contact["first_name"]})",
@@ -256,6 +272,7 @@ while True:
                 enter()
                 continue
 
+            # Edit first name
             if user_choice == "1":
                 contact_first_name = input("Name mokhatab ra vared konid: ")
                 if len(contact_first_name) < 1:
@@ -265,7 +282,7 @@ while True:
                 write_database(contacts)
                 continue
 
-
+            # Edit last name
             if user_choice == "2":
                 contact_last_name = input("Name khanevadegie mokhatab ra vared konid: ")
                 if len(contact_last_name) < 1:
@@ -275,12 +292,15 @@ while True:
                 write_database(contacts)
                 continue
 
+            # Edit phone numbers
             if user_choice == "3":
-                finded_contact["phone"] = contact_phone
+                phone = get_phone_input(finded_contact["phone"])
+                finded_contact["phone"] = phone
                 write_database(contacts)
                 continue
 
 
+            # Exit from the menu
             if user_choice == "4":
                 break
 
@@ -293,27 +313,28 @@ while True:
         enter()
         continue
 
+    # Remove contact 
     if user_choice == "3":
         clear_window()
-        phone = []
-        phone_num_count = get_int("In mokhatab chand shomare darad? ", True)
-        for i in range(phone_num_count):
-            contact_phone = input(f"Shomare {i + 1} om mokhatab ra vared konid: ")
-            phone.append(contact_phone)
+        contacts = get_contacts()
+        user_search_input = find_contact_from_input()
+        try:
+            delete_contact(user_search_input)
+            print("Mokhatab ba movafaqiat hazf shod.")
+        
+        except ContactNotFoundError as e:
+            print(e)
 
-        contact_first_name = input("Name mokhatab ra vared konid (dar gheire in sorat enter konid): ")
-        if len(contact_first_name) < 1:
-            contact_first_name = None
-
-        contact_last_name = input("Name khanevadegie mokhatab ra vared konid (dar gheire in sorat enter konid): ")
-        if len(contact_last_name) < 1:
-            contact_last_name = None
-
-        add_contact(phone=phone, first_name=contact_first_name, last_name=contact_last_name)
-
-        print("Mokhatab ba movafaqiat ezafe shod.")
         enter()
         continue
+
+    # Search for contact 
+    if user_choice == "4":
+        pass
+
+    # Show the all contacts 
+    if user_choice == "5":
+        pass
 
     if user_choice == "6":
         print("Dobare mibinamet khoda negahdar.")
