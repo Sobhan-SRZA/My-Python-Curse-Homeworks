@@ -91,23 +91,32 @@ def edit_contact():
     pass
 
 # Finding the contact
-def find_contact(search: str):
+def find_contact(search: str, find_multipile: bool = False) -> (str | list | None):
     contacts = get_contacts()
+    ids = []
     for id, value in contacts.items():
         first_name = value["first_name"]
         last_name = value["last_name"]
         phone = value["phone"]
-        if (id == search)\
+        if (search.find() == id)\
             or (first_name and (first_name.count(search) > 0))\
             or (last_name and (last_name.count(search) > 0))\
-            or filter(lambda phone: phone.count(search) > 0, phone):
+            or any(filter(lambda phone: phone.count(search) > 0, phone)):
 
-            return id
+            if find_multipile:
+                ids.append(id)
+
+            else:
+                return id
         
         else:
             continue
     
-    return None
+    if len(ids) < 1:
+        return None
+
+    else:
+        return ids
 
 
 # Get integer from the user by custom input description and filtering zero input.
@@ -134,7 +143,7 @@ def get_phone_input(phone: list[str] = []):
             if phone_check:
                 print("Shomare zakhire shode dar in qam =", phone[i])
 
-            contact_phone = input(f"Shomare {i + 1} om mokhatab ra vared konid (baraie khorooj \"e\" befrestid): ")
+            contact_phone = input(f"Shomare {i + 1} om mokhatab ra vared konid (baraie khorooj \"e\" befrestid va baraie hazf \"r\"): ")
             if len(contact_phone) < 1:
                 if phone_check:
                     print("Meqdar taghir nakard.")
@@ -144,14 +153,24 @@ def get_phone_input(phone: list[str] = []):
                 print("Khata: Vorodi khali ast!")
                 continue
 
-            if "e" in contact_phone:
+            if contact_phone.count("e") > 0:
                 if len(phone) < 1:
                     print("Khata: Shoma hich shomarei vared nakardid!")
                     continue
 
                 break
 
-            if phone_check:
+            if contact_phone.count("r") > 0:
+                if len(phone) < 1 or len(phone) <= i:
+                    print("Khata: Shoma hich shomarei vared nakardid!")
+                    continue
+
+                last_number = phone[i]
+                phone.remove(last_number)
+                print(f"Shomare {last_number} ba movaffaqiat pak shod.")
+
+
+            elif phone_check:
                 phone[i] = contact_phone
 
             else:
@@ -162,27 +181,53 @@ def get_phone_input(phone: list[str] = []):
         return phone
 
 # Find contact from user input
-def find_contact_from_input():
+def find_contact_from_input(find_multipile: bool = False):
     while True:
         user_search_input = input("Moshakhasate mokhatab ra vared konid ta peyda shavad: ")
         if len(user_search_input) < 1:
             print("Khata: Voroodi khali ast dobare talash konid!")
             continue
 
-        finded_contact = find_contact(user_search_input)
+        finded_contact = find_contact(user_search_input, find_multipile)
         if finded_contact:
             return finded_contact
 
         print("Khata: Mokhatab yaft nashod!")
         user_choice = input("Baraie talash dobare enter konid dar gheire in sorat \"e\" ra type konid. ")
 
-        if "e" in user_choice:
+        if user_choice.count("e") > 0:
             break
 
         continue
     
     return None
 
+
+# Get contact first name from user input
+def get_contact_first_name_input():
+    while True:
+        contact_first_name = input("Name mokhatab ra vared konid (dar gheire in sorat enter konid): ")
+        if len(contact_first_name) < 1:
+            contact_first_name = None
+
+        if len(contact_first_name) > 15:
+            print("Khata: Tedad horofe name vorodi namotabar had aksar 15 harf mojaz ast!")
+            continue
+
+        return contact_first_name
+
+# Get contact last name from user input
+def get_contact_last_name_input():
+    while True:
+        contact_last_name = input("Name khanevadegi mokhatab ra vared konid (dar gheire in sorat enter konid): ")
+        if len(contact_last_name) < 1:
+            contact_last_name = None
+
+        if len(contact_last_name) > 30:
+            print("Khata: Tedad horofe name khanevadegi vorodi namotabar had aksar 15 harf mojaz ast!")
+            continue
+
+        return contact_last_name
 
 menu_items = {
     "1": "1. Afzoodane mokhatab",
@@ -231,13 +276,9 @@ while True:
         clear_window()
         phone = get_phone_input()
 
-        contact_first_name = input("Name mokhatab ra vared konid (dar gheire in sorat enter konid): ")
-        if len(contact_first_name) < 1:
-            contact_first_name = None
+        contact_first_name = get_contact_first_name_input()
 
-        contact_last_name = input("Name khanevadegie mokhatab ra vared konid (dar gheire in sorat enter konid): ")
-        if len(contact_last_name) < 1:
-            contact_last_name = None
+        contact_last_name = get_contact_last_name_input()
 
         add_contact(phone=phone, first_name=contact_first_name, last_name=contact_last_name)
 
@@ -274,20 +315,14 @@ while True:
 
             # Edit first name
             if user_choice == "1":
-                contact_first_name = input("Name mokhatab ra vared konid: ")
-                if len(contact_first_name) < 1:
-                    contact_first_name = None
-          
+                contact_first_name = get_contact_first_name_input()
                 finded_contact["first_name"] = contact_first_name
                 write_database(contacts)
                 continue
 
             # Edit last name
             if user_choice == "2":
-                contact_last_name = input("Name khanevadegie mokhatab ra vared konid: ")
-                if len(contact_last_name) < 1:
-                    contact_last_name = None
-
+                contact_last_name = get_contact_last_name_input()
                 finded_contact["last_name"] = contact_last_name
                 write_database(contacts)
                 continue
@@ -330,11 +365,110 @@ while True:
 
     # Search for contact 
     if user_choice == "4":
-        pass
+        user_search_input: list[str] = find_contact_from_input(find_multipile=True)
+        while True:
+            contacts = get_contacts()
+            contacts_menu = {}
+            index = 0
+            step = None
+            for id in user_search_input:
+                contact = contacts.get(id)
+                index += 1
+                step = str(index)
+                contacts_menu[step] = f"{step}. {str(contact["first_name"]):>10} {str(contact["last_name"]):>20} | Phone: {", ".join(contact["phone"])}"
+
+            contacts_menu[str(index + 1)] = f"{str(index + 1)}. Khorooj"
+            print_menu(contacts_menu, "Finded Contacts")
+            user_choice = input("Yek gozineh entekhab konid: ")
+
+            # Check menu choices 
+            if user_choice not in contacts_menu.keys():
+                print(f"Khata: Voroodi na motabar! ({", ".join(contacts_menu.keys())})")
+                enter()
+                continue
+
+            # Exit from the menu
+            if contacts_menu[user_choice].count("Khorooj") > 0:
+                break
+            
+            phone_numbers = contacts_menu[user_choice].split(":")[1].replace(" ", "").split(",") 
+            contact_id = find_contact(phone_numbers[0])
+            finded_contact = contacts.get(contact_id)
+            manager_menu_items = {
+                "1": f"1. Virayeshe name (name feli: {finded_contact["first_name"]})",
+                "2": f"2. Virayeshe name khanevadegi (name khanevadegi feli: {finded_contact["last_name"]})",
+                "3": f"3. Virayeshe shomare telephone (shomare telephone feli: {", ".join(finded_contact["phone"])})",
+                "4": "4. Hazfe mokhatab",
+                "5": "5. Khorooj"
+            }
+            print_menu(
+                manager_menu_items,
+                "\tManager Menu"
+            )
+            user_choice = input("Yek gozineh entekhab konid: ")
+
+            # Check menu choices 
+            if user_choice not in manager_menu_items.keys():
+                print(f"Khata: Voroodi na motabar! ({", ".join(manager_menu_items.keys())})")
+                enter()
+                continue
+
+            # Edit first name
+            if user_choice == "1":
+                contact_first_name = get_contact_first_name_input()
+                finded_contact["first_name"] = contact_first_name
+                write_database(contacts)
+                continue
+
+            # Edit last name
+            if user_choice == "2":
+                contact_last_name = get_contact_last_name_input()
+                finded_contact["last_name"] = contact_last_name
+                write_database(contacts)
+                continue
+
+            # Edit phone numbers
+            if user_choice == "3":
+                phone = get_phone_input(finded_contact["phone"])
+                finded_contact["phone"] = phone
+                write_database(contacts)
+                continue
+
+            # Remove the contact
+            if user_choice == "4":
+                try:
+                    delete_contact(contact_id)
+                    print("Mokhatab ba movafaqiat hazf shod.")
+                
+                except ContactNotFoundError as e:
+                    print(e)
+                
+                break
+
+            # Exit from the menu
+            if user_choice == "5":
+                break
+            
+
+        enter()
+        continue
+
 
     # Show the all contacts 
     if user_choice == "5":
-        pass
+        contacts = get_contacts()
+        if len(contacts.keys()) < 1:
+            print("Khata: Hich mokhatabi sabt nashode ast.")
+
+        else:
+            print("-" * 110)
+            for index, (id, value) in enumerate(contacts.items()):
+                print(f"{index + 1}. Name: {str(value["first_name"]):<15} | Name khanevadegi: {str(value["last_name"]):<30}\t | Telephone: {", ".join(value["phone"])}")
+
+            print("-" * 110)
+
+        enter()
+        continue
 
     if user_choice == "6":
         print("Dobare mibinamet khoda negahdar.")
