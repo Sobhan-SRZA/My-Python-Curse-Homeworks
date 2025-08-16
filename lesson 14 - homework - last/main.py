@@ -42,7 +42,7 @@ def read_database():
         return None
 
 # Get all contacts from database
-def get_contacts():
+def get_contacts() -> dict[str, dict[str, (str | list[str])]]:
     return read_database() or {}
 
 # Getting last id of contact from database
@@ -94,12 +94,20 @@ def edit_contact():
 def find_contact(search: str, find_multipile: bool = False) -> (str | list | None):
     contacts = get_contacts()
     ids = []
+    keys = list(contacts.keys())
+    getId = keys.index(search)
+    if getId:
+        if find_multipile:
+            ids.append(keys[getId])
+
+        else:
+            return keys[getId]
+
     for id, value in contacts.items():
         first_name = value["first_name"]
         last_name = value["last_name"]
         phone = value["phone"]
-        if (search.find() == id)\
-            or (first_name and (first_name.count(search) > 0))\
+        if (first_name and (first_name.count(search) > 0))\
             or (last_name and (last_name.count(search) > 0))\
             or any(filter(lambda phone: phone.count(search) > 0, phone)):
 
@@ -168,6 +176,7 @@ def get_phone_input(phone: list[str] = []):
                 last_number = phone[i]
                 phone.remove(last_number)
                 print(f"Shomare {last_number} ba movaffaqiat pak shod.")
+                continue
 
 
             elif phone_check:
