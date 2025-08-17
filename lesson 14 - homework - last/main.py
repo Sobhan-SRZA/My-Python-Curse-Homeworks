@@ -91,40 +91,38 @@ def edit_contact():
     pass
 
 # Finding the contact
-def find_contact(search: str, find_multipile: bool = False) -> (str | list | None):
+def find_contact(search: str) -> (str | list | None):
     contacts = get_contacts()
     ids = []
     keys = list(contacts.keys())
-    getId = keys.index(search)
-    if getId:
-        if find_multipile:
-            ids.append(keys[getId])
+    getId = None
+    try: 
+        getId = keys.index(search)
+    except:
+        getId = None
 
-        else:
-            return keys[getId]
-
-    for id, value in contacts.items():
-        first_name = value["first_name"]
-        last_name = value["last_name"]
-        phone = value["phone"]
-        if (first_name and (first_name.count(search) > 0))\
-            or (last_name and (last_name.count(search) > 0))\
-            or any(filter(lambda phone: phone.count(search) > 0, phone)):
-
-            if find_multipile:
-                ids.append(id)
-
-            else:
-                return id
-        
-        else:
-            continue
-    
-    if len(ids) < 1:
-        return None
+    if type(getId) == int:
+        ids.append(keys[getId])
 
     else:
+        for id, value in contacts.items():
+            first_name = value["first_name"]
+            last_name = value["last_name"]
+            phone = value["phone"]
+            if (first_name and (first_name.count(search) > 0))\
+                or (last_name and (last_name.count(search) > 0))\
+                or any(filter(lambda phone: phone.count(search) > 0, phone)):
+
+                ids.append(id)
+            
+            else:
+                continue
+        
+    if len(ids) > 1:
         return ids
+
+    else:
+        return ids[0]
 
 
 # Get integer from the user by custom input description and filtering zero input.
@@ -144,23 +142,14 @@ def get_int(input_describe: str = "Adad ra vared konid: ", skip_zero: bool = Fal
 
 
 # Return phone numbers from user enter
-def get_phone_input(phone: list[str] = []):
+def get_phone_input(phone: list[str] = [], can_remove = " va baraie hazf \"r\""):
         i = 0
         while True:
-            phone_check = i <= (len(phone) - 1) and phone[i]
+            phone_check = len(phone) > 0 and (i <= (len(phone) - 1) and phone[i])
             if phone_check:
                 print("Shomare zakhire shode dar in qam =", phone[i])
 
-            contact_phone = input(f"Shomare {i + 1} om mokhatab ra vared konid (baraie khorooj \"e\" befrestid va baraie hazf \"r\"): ")
-            if len(contact_phone) < 1:
-                if phone_check:
-                    print("Meqdar taghir nakard.")
-                    i += 1
-                    continue
-
-                print("Khata: Vorodi khali ast!")
-                continue
-
+            contact_phone = input(f"Shomare {i + 1} om mokhatab ra vared konid (baraie khorooj \"e\" befrestid{can_remove}): ")            
             if contact_phone.count("e") > 0:
                 if len(phone) < 1:
                     print("Khata: Shoma hich shomarei vared nakardid!")
@@ -168,7 +157,7 @@ def get_phone_input(phone: list[str] = []):
 
                 break
 
-            if contact_phone.count("r") > 0:
+            if len(can_remove) > 0 and contact_phone.count("r") > 0:
                 if len(phone) < 1 or len(phone) <= i:
                     print("Khata: Shoma hich shomarei vared nakardid!")
                     continue
@@ -178,8 +167,20 @@ def get_phone_input(phone: list[str] = []):
                 print(f"Shomare {last_number} ba movaffaqiat pak shod.")
                 continue
 
+            if not contact_phone.isdigit():
+                print("Khata: Faghat adad morede qabol ast!")
+                continue
 
-            elif phone_check:
+            if len(contact_phone) < 1:
+                if phone_check:
+                    print("Meqdar taghir nakard.")
+                    i += 1
+                    continue
+
+                print("Khata: Vorodi khali ast!")
+                continue
+
+            if phone_check:
                 phone[i] = contact_phone
 
             else:
@@ -190,14 +191,14 @@ def get_phone_input(phone: list[str] = []):
         return phone
 
 # Find contact from user input
-def find_contact_from_input(find_multipile: bool = False):
+def find_contact_from_input():
     while True:
         user_search_input = input("Moshakhasate mokhatab ra vared konid ta peyda shavad: ")
         if len(user_search_input) < 1:
             print("Khata: Voroodi khali ast dobare talash konid!")
             continue
 
-        finded_contact = find_contact(user_search_input, find_multipile)
+        finded_contact = find_contact(user_search_input)
         if finded_contact:
             return finded_contact
 
@@ -216,10 +217,10 @@ def find_contact_from_input(find_multipile: bool = False):
 def get_contact_first_name_input():
     while True:
         contact_first_name = input("Name mokhatab ra vared konid (dar gheire in sorat enter konid): ")
-        if len(contact_first_name) < 1:
+        if len(str(contact_first_name)) < 1:
             contact_first_name = None
 
-        if len(contact_first_name) > 15:
+        if len(str(contact_first_name)) > 15:
             print("Khata: Tedad horofe name vorodi namotabar had aksar 15 harf mojaz ast!")
             continue
 
@@ -229,10 +230,10 @@ def get_contact_first_name_input():
 def get_contact_last_name_input():
     while True:
         contact_last_name = input("Name khanevadegi mokhatab ra vared konid (dar gheire in sorat enter konid): ")
-        if len(contact_last_name) < 1:
+        if len(str(contact_last_name)) < 1:
             contact_last_name = None
 
-        if len(contact_last_name) > 30:
+        if len(str(contact_last_name)) > 30:
             print("Khata: Tedad horofe name khanevadegi vorodi namotabar had aksar 15 harf mojaz ast!")
             continue
 
@@ -283,7 +284,7 @@ while True:
     # Add contact
     if user_choice == "1":
         clear_window()
-        phone = get_phone_input()
+        phone = get_phone_input(can_remove="")
 
         contact_first_name = get_contact_first_name_input()
 
@@ -374,7 +375,7 @@ while True:
 
     # Search for contact 
     if user_choice == "4":
-        user_search_input: list[str] = find_contact_from_input(find_multipile=True)
+        user_search_input: list[str] = find_contact_from_input()
         while True:
             contacts = get_contacts()
             contacts_menu = {}
@@ -384,7 +385,7 @@ while True:
                 contact = contacts.get(id)
                 index += 1
                 step = str(index)
-                contacts_menu[step] = f"{step}. {str(contact["first_name"]):>10} {str(contact["last_name"]):>20} | Phone: {", ".join(contact["phone"])}"
+                contacts_menu[step] = f"{step}. First Name: {str(contact["first_name"]):>10} | Last Name: {str(contact["last_name"]):>20} | Phone: {", ".join(contact["phone"])}"
 
             contacts_menu[str(index + 1)] = f"{str(index + 1)}. Khorooj"
             print_menu(contacts_menu, "Finded Contacts")
